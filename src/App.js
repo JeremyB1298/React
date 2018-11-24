@@ -19,7 +19,8 @@ class App extends Component {
       player: true,
       winner: null,
       scoreX: 0,
-      scoreO: 0
+      scoreO: 0,
+      namePlayer1: 'Player1'
     };
   }
 
@@ -150,12 +151,32 @@ class App extends Component {
 
 
   }
-
+  submitPlayerName(){
+    alert('A name was submitted: ' + this.state.namePlayer1);
+  }
+  handleChange(event) {
+    //this.setState({namePlayer1: event.target.value});
+    this.setState(state => {
+      let namePlayer1 = event.target.value;
+      return{
+        namePlayer1: namePlayer1
+      }
+    })
+  }
   render() {
     const status = this.whichPlayer();
     return (
       <div>
       <div className="status">{status}</div>
+      <div>
+        <form onSubmit={this.submitPlayerName}>
+          <label>
+            Name Player X:
+            <input type="text" value={this.state.namePlayer1} onChange={this.handleChange}/>
+          </label>
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
       <div className="board-row">
         <Square 
         value={this.state.squares[0][ 0]} 
