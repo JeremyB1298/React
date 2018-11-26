@@ -20,7 +20,8 @@ class App extends Component {
       winner: null,
       scoreX: 0,
       scoreO: 0,
-      namePlayer1: 'Player1'
+      namePlayer1: 'Player1',
+      namePlayer2: 'Player2'
     };
   }
 
@@ -109,19 +110,23 @@ class App extends Component {
       }
       else{
         if(this.state.player){
-        return 'Next player: X'
+          let nextPlayer = 'Next player: ' + this.state.namePlayer1
+          return nextPlayer
         }
         else{
-          return 'Next player: O'
+          let nextPlayer = 'Next player: ' + this.state.namePlayer2
+          return nextPlayer
         }
       }
     }
     else{
       if(this.state.player === true){
-        return 'O est vainqueur';
+        let winner = this.state.namePlayer2 + ' est vainqueur'
+        return winner;
       }
       else{
-        return 'X est vainqueur';
+        let winner = this.state.namePlayer1 + ' est vainqueur'
+        return winner;
       }
     }
   }
@@ -154,12 +159,27 @@ class App extends Component {
   submitPlayerName(){
     alert('A name was submitted: ' + this.state.namePlayer1);
   }
-  handleChange(event) {
-    //this.setState({namePlayer1: event.target.value});
+  handleChangeName1(event) {
+    event.persist()
     this.setState(state => {
-      let namePlayer1 = event.target.value;
+      let namePlayer1 = "Player1"
+      if(event.target.value != null){
+         namePlayer1 = event.target.value
+      }
       return{
         namePlayer1: namePlayer1
+      }
+    })
+  }
+  handleChangeName2(event) {
+    event.persist()
+    this.setState(state => {
+      let namePlayer2 = "Player2"
+      if(event.target.value != null){
+         namePlayer2 = event.target.value
+      }
+      return{
+        namePlayer2: namePlayer2
       }
     })
   }
@@ -169,12 +189,15 @@ class App extends Component {
       <div>
       <div className="status">{status}</div>
       <div>
-        <form onSubmit={this.submitPlayerName}>
+        <form >
           <label>
             Name Player X:
-            <input type="text" value={this.state.namePlayer1} onChange={this.handleChange}/>
+            <input type="text" value={this.state.namePlayer1} onChange={e => this.handleChangeName1(e)}/>
+          </label><br></br>
+          <label>
+            Name Player O:
+            <input type="text" value={this.state.namePlayer2} onChange={e => this.handleChangeName2(e)}/>
           </label>
-          <input type="submit" value="Submit" />
         </form>
       </div>
       <div className="board-row">
