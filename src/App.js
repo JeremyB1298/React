@@ -56,9 +56,34 @@ class App extends Component {
         winner: this.getWinner(squares)
       }
     })
+    console.log("WINNER !!!!!!" + this.state.winner)
+    this.setState(state => {
+      return{
+        scoreO: this.getScore0(),
+        scoreX: this.getScoreX()
+      }
+    })
   }
 
- 
+  getScore0(){
+    if (this.state.winner === 'O'){
+      console.log("score update O")
+      return this.state.scoreO + 1
+    }  else {
+      console.log("score no update O")
+      return this.state.scoreO
+    }
+  }
+  getScoreX(){
+    console.log(this.state.winner)
+    if (this.state.winner === 'X'){
+      console.log("score update X")
+      return this.state.scoreX + 1
+    }  else {
+      console.log("score no update X")
+      return this.state.scoreX
+    }
+  }
 
   handleClick(x, y){ 
     if(this.state.winner == null && this.state.squares[x][y] == null){
@@ -250,8 +275,8 @@ class App extends Component {
         onClick={() => this.handleClick(2, 2)}
       />
       </div>
-      <div>Score de X : <Score value={this.state.scoreX} /> </div>
-      <div>Score de O : <Score value={this.state.scoreO} /></div>
+      <div>Score de {this.state.namePlayer1} : <Score value={this.state.scoreX} /> </div>
+      <div>Score de {this.state.namePlayer2} : <Score value={this.state.scoreO} /></div>
       <div> <ResetButton onClick={() => this.ressetGame()} /> </div>
     </div>
 
