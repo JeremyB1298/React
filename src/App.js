@@ -37,6 +37,24 @@ class App extends Component {
     ]
   }
 
+  updateScoreX() {
+    console.log("scoreupdate" + this.state.winner)
+    var scoreX = 0
+    if(this.state.winner == 'X') {
+      scoreX++
+    }
+    return this.state.scoreX + scoreX
+  }
+
+    updateScoreO() {
+    console.log("scoreupdate" + this.getWinner(this.state.squares))
+    var scoreO = 0
+    if(this.state.winner == 'O') {
+      scoreO++
+    }
+    return this.state.scoreO + scoreO
+  }
+
   play(x,y){
     this.setState(state => {
       let squares = null;
@@ -48,41 +66,15 @@ class App extends Component {
       else{
       squares = this.updateBoard(x,y,"O",this.state.squares);
       player = !this.state.player;
-      }
-  
+      }  
       return{
         squares: squares,
-        player: player,
-        winner: this.getWinner(squares)
+        winner: this.getWinner(squares),
+        player: player, 
+        scoreX: this.updateScoreX(),
+        scoreO: this.updateScoreO()
       }
     })
-    console.log("WINNER !!!!!!" + this.state.winner)
-    this.setState(state => {
-      return{
-        scoreO: this.getScore0(),
-        scoreX: this.getScoreX()
-      }
-    })
-  }
-
-  getScore0(){
-    if (this.state.winner === 'O'){
-      console.log("score update O")
-      return this.state.scoreO + 1
-    }  else {
-      console.log("score no update O")
-      return this.state.scoreO
-    }
-  }
-  getScoreX(){
-    console.log(this.state.winner)
-    if (this.state.winner === 'X'){
-      console.log("score update X")
-      return this.state.scoreX + 1
-    }  else {
-      console.log("score no update X")
-      return this.state.scoreX
-    }
   }
 
   handleClick(x, y){ 
@@ -92,6 +84,8 @@ class App extends Component {
     else{      
       console.log("fin");
     }
+    console.log("SCOREUPDATE" + this.state.winner)
+    //this.updateScore()
   }
 
   getWinner(squares){
@@ -128,7 +122,6 @@ class App extends Component {
 
   whichPlayer(){
     if(this.state.winner === null){
-
       if(this.isEgual() === true){
         return 'Egalité';
       }
@@ -172,10 +165,9 @@ class App extends Component {
     else{
       return false;
     }
-    
   }
 
-  ressetGame() {
+  resetGame(scoreX, scoreO) {
     this.setState(state => {
       let squares = [
       [null,null,null],
@@ -185,13 +177,18 @@ class App extends Component {
     let winner = null
       return{
         squares: squares,
-        winner: winner
+        winner: winner,
+        scoreX: scoreX,
+        scoreO: scoreO
       }
     })
+    //this.updateScore()
   }
+
   submitPlayerName(){
     alert('A name was submitted: ' + this.state.namePlayer1);
   }
+
   handleChangeName1(event) {
     event.persist()
     this.setState(state => {
@@ -204,6 +201,23 @@ class App extends Component {
       }
     })
   }
+
+  // updateScore(){
+  //   this.setState(state => {
+  //     var scoreX = 0
+  //     var scoreO = 0
+  //     if(this.state.winner == 'X') {
+  //       scoreX++
+  //     } else if(this.state.winner == 'O') {
+  //       scoreO++
+  //     }
+  //     return{
+  //       scoreX: this.state.scoreX + scoreX,
+  //       scoreO: this.state.scoreO + scoreO
+  //     }
+  //   })
+  // }
+
   handleChangeName2(event) {
     event.persist()
     this.setState(state => {
@@ -216,8 +230,11 @@ class App extends Component {
       }
     })
   }
+
   render() {
     const status = this.whichPlayer();
+    const scoreX = this.updateScoreX();
+    const scoreO = this.updateScoreO();
     return (
       <div>
       <div className="status">{status}</div>
@@ -275,9 +292,9 @@ class App extends Component {
         onClick={() => this.handleClick(2, 2)}
       />
       </div>
-      <div>Score de {this.state.namePlayer1} : <Score value={this.state.scoreX} /> </div>
-      <div>Score de {this.state.namePlayer2} : <Score value={this.state.scoreO} /></div>
-      <div> <ResetButton onClick={() => this.ressetGame()} /> </div>
+      <div>Score de {this.state.namePlayer1} : <Score value={scoreX} /> </div>
+      <div>Score de {this.state.namePlayer2} : <Score value={scoreO} /></div>
+      <div> <ResetButton onClick={() => this.resetGame(scoreX, scoreO)} /> </div>
     </div>
 
     );
