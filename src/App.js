@@ -21,7 +21,8 @@ class App extends Component {
       scoreX: 0,
       scoreO: 0,
       namePlayer1: 'Player1',
-      namePlayer2: 'Player2'
+      namePlayer2: 'Player2',
+      tabPlays: new Array()
     };
   }
 
@@ -59,22 +60,33 @@ class App extends Component {
     this.setState(state => {
       let squares = null;
       let player = null;
+      let symbolPlayer = null;
       if(this.state.player == true){
       squares = this.updateBoard(x,y,"X",this.state.squares);
       player = !this.state.player;
+      symbolPlayer = "X"
       }
       else{
       squares = this.updateBoard(x,y,"O",this.state.squares);
       player = !this.state.player;
+      symbolPlayer = "O"
       }  
       return{
         squares: squares,
         winner: this.getWinner(squares),
         player: player, 
         scoreX: this.updateScoreX(),
-        scoreO: this.updateScoreO()
+        scoreO: this.updateScoreO(),
+        tabPlays: this.updatePlayToList(x, y, symbolPlayer)
       }
     })
+    console.log("Tab Plays" + this.state.tabPlays[this.state.tabPlays.length - 1])
+  }
+
+  updatePlayToList(x, y, playerSymbol) {
+    let tabPlays = this.state.tabPlays
+    tabPlays.push([x, y, playerSymbol])
+    return tabPlays
   }
 
   handleClick(x, y){ 
@@ -231,6 +243,28 @@ class App extends Component {
     })
   }
 
+  undoPlays() {
+    for (var i = 0; i < this.state.tabPlays.length; i++) {
+      console.log(this.state.tabPlays[i])
+    }
+    if (this.state.tabPlays.length > 0 && this.state.winner === null) {
+      this.setState(state => {
+      let tabPlays = this.state.tabPlays
+      let squares = null;
+      let player = null;
+      squares = this.updateBoard(tabPlays[tabPlays.length-1][0],tabPlays[tabPlays.length-1][1],null,this.state.squares);
+      player = !this.state.player;
+
+      tabPlays.splice(tabPlays.length-1, 1)
+      return{
+        squares: squares,
+        player: player,
+        tabPlays: tabPlays
+      }
+    })
+    }
+  }
+
   render() {
     const status = this.whichPlayer();
     const scoreX = this.updateScoreX();
@@ -295,6 +329,7 @@ class App extends Component {
       <div>Score de {this.state.namePlayer1} : <Score value={scoreX} /> </div>
       <div>Score de {this.state.namePlayer2} : <Score value={scoreO} /></div>
       <div> <ResetButton onClick={() => this.resetGame(scoreX, scoreO)} /> </div>
+      <div> <button onClick={() => this.undoPlays()} > undo</button> </div>
     </div>
 
     );
