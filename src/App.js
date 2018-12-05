@@ -22,7 +22,8 @@ class App extends Component {
       scoreO: 0,
       namePlayer1: 'Player1',
       namePlayer2: 'Player2',
-      tabPlays: new Array()
+      tabPlays: new Array(),
+      idTabPlays: 0
     };
   }
 
@@ -39,7 +40,6 @@ class App extends Component {
   }
 
   updateScoreX() {
-    console.log("scoreupdate" + this.state.winner)
     var scoreX = 0
     if(this.state.winner == 'X') {
       scoreX++
@@ -48,7 +48,6 @@ class App extends Component {
   }
 
     updateScoreO() {
-    console.log("scoreupdate" + this.getWinner(this.state.squares))
     var scoreO = 0
     if(this.state.winner == 'O') {
       scoreO++
@@ -80,12 +79,19 @@ class App extends Component {
         tabPlays: this.updatePlayToList(x, y, symbolPlayer)
       }
     })
-    console.log("Tab Plays" + this.state.tabPlays[this.state.tabPlays.length - 1])
   }
 
   updatePlayToList(x, y, playerSymbol) {
     let tabPlays = this.state.tabPlays
     tabPlays.push([x, y, playerSymbol])
+    this.setState(state => {
+      let idTabPlays = this.state.idTabPlays
+      idTabPlays++
+
+      return {
+        idTabPlays: idTabPlays
+      }
+    })
     return tabPlays
   }
 
@@ -94,9 +100,7 @@ class App extends Component {
       this.play(x, y);
     }
     else{      
-      console.log("fin");
     }
-    console.log("SCOREUPDATE" + this.state.winner)
     //this.updateScore()
   }
 
@@ -163,9 +167,7 @@ class App extends Component {
   isEgual(){  
     let bool=true;
     this.state.squares.forEach(tab => {
-      console.log(tab);
       tab.forEach(element => {
-        console.log(element);
         if(element === null){
           bool = false;
         }
@@ -187,11 +189,13 @@ class App extends Component {
       [null,null,null]
     ];
     let winner = null
+    let tabPlays = new Array()
       return{
         squares: squares,
         winner: winner,
         scoreX: scoreX,
-        scoreO: scoreO
+        scoreO: scoreO,
+        tabPlays: tabPlays
       }
     })
     //this.updateScore()
@@ -244,22 +248,44 @@ class App extends Component {
   }
 
   undoPlays() {
-    for (var i = 0; i < this.state.tabPlays.length; i++) {
-      console.log(this.state.tabPlays[i])
-    }
-    if (this.state.tabPlays.length > 0 && this.state.winner === null) {
+    // for (var i = 0; i < this.state.tabPlays.length; i++) {
+    //   console.log(this.state.tabPlays[i])
+    // }
+    if (this.state.tabPlays[0] != null && this.state.winner === null) {
       this.setState(state => {
       let tabPlays = this.state.tabPlays
       let squares = null;
       let player = null;
-      squares = this.updateBoard(tabPlays[tabPlays.length-1][0],tabPlays[tabPlays.length-1][1],null,this.state.squares);
+      let idTabPlays = this.state.idTabPlays
+      squares = this.updateBoard(tabPlays[idTabPlays-1][0],tabPlays[idTabPlays-1][1],null,this.state.squares);
       player = !this.state.player;
-
-      tabPlays.splice(tabPlays.length-1, 1)
+      idTabPlays--
       return{
         squares: squares,
         player: player,
-        tabPlays: tabPlays
+        tabPlays: tabPlays,
+        idTabPlays: idTabPlays
+      }
+    })
+    }
+  }
+
+  redoPlays() {
+    if (this.state.tabPlays[this.state.idTabPlays] != null && this.state.winner === null) {
+      this.setState(state => {
+      let tabPlays = this.state.tabPlays
+      let squares = null;
+      let player = null;
+      let idTabPlays = this.state.idTabPlays
+      console.log(tabPlays[idTabPlays])
+      squares = this.updateBoard(tabPlays[idTabPlays][0],tabPlays[idTabPlays][1],tabPlays[idTabPlays][2],this.state.squares);
+      player = !this.state.player;
+      idTabPlays++
+      return{
+        squares: squares,
+        player: player,
+        tabPlays: tabPlays,
+        idTabPlays: idTabPlays
       }
     })
     }
@@ -330,6 +356,7 @@ class App extends Component {
       <div>Score de {this.state.namePlayer2} : <Score value={scoreO} /></div>
       <div> <ResetButton onClick={() => this.resetGame(scoreX, scoreO)} /> </div>
       <div> <button onClick={() => this.undoPlays()} > undo</button> </div>
+      <div> <button onClick={() => this.redoPlays()} > redo</button> </div>
     </div>
 
     );
