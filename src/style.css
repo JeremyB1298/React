@@ -1,0 +1,18 @@
+.status {
+   
+}
+.nameBloc {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.case {
+    padding: 50px 50px;
+}
+.score {
+    font-weight: bold;
+}
+.optionsButton {
+    margin-right: 20px;
+}

@@ -5,9 +5,7 @@ function Score (props){
  
   
       return (
-            <h3>
-            {props.value}
-            </h3>
+            <h3>{props.value}</h3>
         )
     
 
