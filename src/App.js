@@ -196,7 +196,8 @@ class App extends Component {
         winner: winner,
         scoreX: scoreX,
         scoreO: scoreO,
-        tabPlays: tabPlays
+        tabPlays: tabPlays,
+        idTabPlays: 0
       }
     })
     //this.updateScore()
