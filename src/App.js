@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './style.css';
 import Square from './Square';
 import Score from './Score';
 import ResetButton from './ResetButton';
@@ -296,20 +297,24 @@ class App extends Component {
     const scoreX = this.updateScoreX();
     const scoreO = this.updateScoreO();
     return (
+      <div className="nameBloc" >
       <div>
-      <div className="status">{status}</div>
-      <div>
+      <div className="status">{status}</div><br></br>
         <form >
           <label>
             Name Player X:
-            <input type="text" value={this.state.namePlayer1} onChange={e => this.handleChangeName1(e)}/>
-          </label><br></br>
+            <input class="" type="text" value={this.state.namePlayer1} onChange={e => this.handleChangeName1(e)}/>
+          </label>
           <label>
             Name Player O:
             <input type="text" value={this.state.namePlayer2} onChange={e => this.handleChangeName2(e)}/>
           </label>
         </form>
       </div>
+      <br></br><br></br>
+      <div > <button class="optionsButton" onClick={() => this.undoPlays()} > undo</button> 
+       <button onClick={() => this.redoPlays()} > redo</button> </div>
+       <br></br>
       <div className="board-row">
         <Square 
         value={this.state.squares[0][ 0]} 
@@ -352,11 +357,9 @@ class App extends Component {
         onClick={() => this.handleClick(2, 2)}
       />
       </div>
-      <div>Score de {this.state.namePlayer1} : <Score value={scoreX} /> </div>
-      <div>Score de {this.state.namePlayer2} : <Score value={scoreO} /></div>
+      <div className="score" > Score de {this.state.namePlayer1} : <Score value={scoreX} /> 
+      Score de {this.state.namePlayer2} : <Score value={scoreO} /></div>
       <div> <ResetButton onClick={() => this.resetGame(scoreX, scoreO)} /> </div>
-      <div> <button onClick={() => this.undoPlays()} > undo</button> </div>
-      <div> <button onClick={() => this.redoPlays()} > redo</button> </div>
     </div>
 
     );
